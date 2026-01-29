@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WikiQuiz Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans flex h-screen">
+    <div class="w-64 bg-slate-900 text-white p-6 flex flex-col gap-8 shadow-xl">
+        <h1 class="text-2xl font-bold text-blue-400">WikiQuiz Pro</h1>
+        <nav class="flex flex-col gap-2">
+            <button onclick="switchTab('quiz')" class="p-3 rounded-lg hover:bg-slate-800 transition text-left">📝 Generate Quiz</button>
+            <button onclick="switchTab('history')" class="p-3 rounded-lg hover:bg-slate-800 transition text-left">📜 Past Quizzes</button>
+        </nav>
+    </div>
+
+    <div class="flex-1 p-10 overflow-y-auto">
+        <div id="quiz-tab" class="max-w-4xl mx-auto space-y-8">
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200">
+                <h2 class="text-xl font-bold mb-4">Enter Wikipedia URL</h2>
+                <div class="flex gap-4">
+                    <input type="text" id="wikiUrl" class="flex-1 border p-4 rounded-xl outline-none focus:ring-2 focus:ring-blue-400" placeholder="https://en.wikipedia.org/wiki/..." value="">
+                    <button onclick="createQuiz()" class="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold">Generate</button>
+                </div>
+            </div>
+            <div id="loading" class="hidden text-center py-10">
+                <div class="animate-spin inline-block w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mb-4"></div>
+                <p>Generating 7 Questions...</p>
+            </div>
+            <div id="quizDisplay" class="space-y-6"></div>
+        </div>
+
+        <div id="history-tab" class="hidden max-w-4xl mx-auto">
+            <div class="bg-white p-8 rounded-2xl border">
+                <h2 class="text-xl font-bold mb-6">History</h2>
+                <table class="w-full text-left">
+                    <thead class="bg-gray-50"><tr><th class="p-4">URL</th><th class="p-4">Date</th><th class="p-4">Action</th></tr></thead>
+                    <tbody id="historyTable"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            document.getElementById('quiz-tab').classList.toggle('hidden', tab !== 'quiz');
+            document.getElementById('history-tab').classList.toggle('hidden', tab !== 'history');
+            if (tab === 'history') fetchHistory();
+        }
+
+        async function createQuiz() {
+            const url = document.getElementById('wikiUrl').value;
+            if (!url.includes('wikipedia.org')) return alert("Enter valid Wiki URL");
+            
+            document.getElementById('loading').classList.remove('hidden');
+            document.getElementById('quizDisplay').innerHTML = "";
+
+            try {
+                const res = await fetch('http://127.0.0.1:8000/generate-quiz', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({url})
+                });
+                const data = await res.json();
+                if (data.error) throw new Error(data.error);
+                
+                const questions = Array.isArray(data) ? data : (data.questions || [data]);
+                renderQuiz(questions);
+            } catch (e) {
+                alert(e.message);
+            } finally {
+                document.getElementById('loading').classList.add('hidden');
+            }
+        }
+
+        function renderQuiz(questions) {
+            document.getElementById('quizDisplay').innerHTML = questions.map((q, i) => {
+                let diffColor = "bg-green-100 text-green-700"; 
+                if (q.difficulty === "Medium") diffColor = "bg-yellow-100 text-yellow-700";
+                if (q.difficulty === "Hard") diffColor = "bg-red-100 text-red-700";
+
+                return `
+                <div class="bg-white p-8 rounded-2xl shadow-sm border mb-4 relative">
+                    <span class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold uppercase ${diffColor}">
+                        ${q.difficulty || 'Medium'}
+                    </span>
+                    
+                    <h3 class="font-bold mb-4">${i+1}. ${q.question}</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        ${Object.entries(q.options).map(([key, val]) => `
+                            <button onclick="document.getElementById('ans-${i}').classList.remove('hidden')" class="text-left p-3 border rounded-lg hover:bg-blue-50">
+                                <b>${key}:</b> ${val}
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div id="ans-${i}" class="hidden mt-4 p-4 bg-gray-50 rounded-lg text-sm">
+                        <b>Correct: ${q.correct_answer}</b><br>${q.explanation}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        async function fetchHistory() {
+            const res = await fetch('http://127.0.0.1:8000/history');
+            const data = await res.json();
+            document.getElementById('historyTable').innerHTML = data.map(item => `
+                <tr class="border-b">
+                    <td class="p-4 truncate max-w-xs">${item.wiki_url}</td>
+                    <td class="p-4">${new Date(item.created_at).toLocaleDateString()}</td>
+                    <td class="p-4">
+                        <button onclick="alert('JSON in Console'); console.log(${JSON.stringify(item.quiz_data)})" class="text-blue-600">View</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+    </script>
+</body>
+</html>
