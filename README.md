@@ -1,6 +1,6 @@
-# 🧠 WikiQuiz Pro: AI-Powered Learning
+# 🧠 WikiQuiz: AI-Powered Quiz
 
-WikiQuiz Pro is a full-stack web application that transforms any Wikipedia URL into an interactive 7-question quiz using Large Language Models.
+WikiQuiz  is a full-stack web application that transforms any Wikipedia URL into an interactive 7-question quiz using Large Language Models.
 
 By integrating **FastAPI** for a robust backend and **Tailwind CSS** for a modern, responsive frontend, the platform provides a seamless user experience for active learning.
 The core engine utilizes **BeautifulSoup4** to scrape and clean web data, which is then processed by the **Llama-3.3-70B model** via the **Groq Cloud API** to generate contextually accurate,
