@@ -30,7 +30,8 @@ multiple-choice questions. To ensure data persistence and progress tracking, the
 
 ![Main Interface](Screenshot%202026-01-30%20003106.png)
 
-![Quiz Results](Screenshot%202026-01-30%20001451.png)
+![Quiz Results](Screenshot%202026-01-29%20232812.png)
+![](Screenshot%202026-01-30%20001451.png)
 ![](Screenshot%202026-01-30%20001506.png)
 ![](Screenshot%202026-01-30%20001516.png)
 
