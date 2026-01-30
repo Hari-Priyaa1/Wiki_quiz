@@ -24,3 +24,14 @@ multiple-choice questions. To ensure data persistence and progress tracking, the
 2. **Environment Variables:** Create a `.env` file with your `GROQ_API_KEY` and `DB_PASSWORD`.
 3. **Install Dependencies:** ```bash
    pip install fastapi uvicorn requests beautifulsoup4 psycopg2-binary python-dotenv groq
+
+
+## 📸 App Preview
+
+![Main Interface](Screenshot%202026-01-30%20003106.png)
+
+![Quiz Results](Screenshot%202026-01-30%20001451.png)
+![](Screenshot%202026-01-30%20001506.png)
+![](Screenshot%202026-01-30%20001516.png)
+
+![History](Screenshot%202026-01-30%20093444.png)
