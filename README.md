@@ -37,6 +37,23 @@ multiple-choice questions. To ensure data persistence and progress tracking, the
 3. **AI Logic Test:** Verify that 7 unique multiple-choice questions appear based on the URL content.
 4. **Database Test:** Complete a quiz and check the "History" tab to ensure the score was correctly saved to PostgreSQL.
 
+## 🤖 LangChain Prompt Templates
+
+To ensure high-quality output and consistent formatting, the following prompt templates are used to guide the **Llama-3.3-70B model**:
+
+### 📝 Quiz Generation Template
+This template is designed to convert scraped Wikipedia content into a structured quiz format.
+**System Prompt:**
+"You are an expert educator. Based on the provided Wikipedia context, generate a 7-question multiple-choice quiz. Ensure questions vary in difficulty and cover the most important concepts."
+
+**User Template:**
+"Context: {scraped_text} 
+Format: Output as a JSON object containing questions, options A-D, the correct answer, and a brief explanation for each."
+
+### 🔗 Related Topic Generation Template
+This template helps the user explore further by suggesting connected themes.
+**User Template:**
+"Based on the topic '{topic}', suggest 3 related Wikipedia topics that would help a student understand this subject more deeply. Provide only the titles of the topics."
 
 ## 📸 App Preview
 
