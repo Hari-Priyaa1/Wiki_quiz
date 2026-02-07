@@ -29,13 +29,13 @@ multiple-choice questions. To ensure data persistence and progress tracking, the
 * **GET `/`**: Serves the main frontend interface (index.html).
 * **POST `/generate-quiz`**: Accepts a Wikipedia URL, scrapes the content, and returns 7 AI-generated questions.
 * **GET `/history`**: Fetches all previous quiz results and scores from the PostgreSQL database.
-* **POST `/save-results`**: Saves the user's latest score and quiz data to the database.
+* **POST `/save-results`**: Saves the user's latest quiz data to the database.
 
 ### 🧪 Testing Steps
 1. **Frontend Test:** Open `http://127.0.0.1:8000` in your browser and verify the UI loads.
 2. **Scraping Test:** Enter a valid Wikipedia URL (e.g., `https://en.wikipedia.org/wiki/Python_(programming_language)`) and click "Generate".
 3. **AI Logic Test:** Verify that 7 unique multiple-choice questions appear based on the URL content.
-4. **Database Test:** Complete a quiz and check the "History" tab to ensure the score was correctly saved to PostgreSQL.
+4. **Database Test:** Complete a quiz and check the "History" tab to ensure the data was correctly saved to PostgreSQL.
 
 ## 🤖 LangChain Prompt Templates
 
